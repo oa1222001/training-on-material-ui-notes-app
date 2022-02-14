@@ -1,16 +1,36 @@
-import { Button, Container, Grid, Paper } from "@material-ui/core";
+import { Button, Container, Grid, makeStyles, Paper } from "@material-ui/core";
 import React, { useEffect } from "react";
+import Masonry from "react-masonry-css";
 import { useNavigate } from "react-router-dom";
 import NoteCard from "../components/NoteCard";
-
+const useStyles = makeStyles({
+  myMasonryGrid: {
+    display: "flex",
+    marginLeft: "-30px",
+    width: "auto",
+  },
+  myMasonryGridColumn: {
+    paddingLeft: "30px",
+    backgroundClip: "padding-box",
+  },
+  myMasonryGridColumnDiv: {
+    background: "#13abc9",
+    marginBottom: "30px",
+  },
+});
 export default function Notes({ deleteNote, notes }) {
   useEffect(() => {
     console.log(notes);
   }, []);
   const navigate = useNavigate();
-
+  const classes = useStyles(notes);
   const createNoteHandler = () => {
     navigate("/create", { replace: true });
+  };
+  const breakpoints = {
+    default: 3,
+    1100: 2,
+    700: 1,
   };
   return (
     <Container>
@@ -28,13 +48,17 @@ export default function Notes({ deleteNote, notes }) {
           <Paper >4</Paper >
         </Grid>
       </Grid> */}
-      <Grid container spacing={3}>
+      <Masonry
+        breakpointCols={breakpoints}
+        className={classes.myMasonryGrid}
+        columnClassName={classes.myMasonryGridColumn}
+      >
         {notes.map((n) => (
-          <Grid item key={n.id} xs={12} sm={4} md={6} lg={3}>
+          <div key={n.id} className={classes.myMasonryGridColumnDiv}>
             <NoteCard note={n} deleteNote={deleteNote} />
-          </Grid>
+          </div>
         ))}
-      </Grid>
+      </Masonry>
       <Button
         variant="contained"
         style={{ marginTop: "20px" }}
